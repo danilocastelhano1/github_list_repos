@@ -6,6 +6,7 @@
 - Postgres (store repos data into database)
 
 ## Steps
+- rename .env-example to .env
 - just run ```docker-compose up --build```
 Once the docker is running, you can test the web in:
 ```127.0.0.1:8000``` in your web browser
