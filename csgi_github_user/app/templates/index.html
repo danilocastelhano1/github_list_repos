@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+<body>
+    {% block content %}
+    <div class="card">
+        <div class="card-body" style="padding-top: 10px">
+            <h5 class="card-title">List max of 5 repos by username</h5>
+            <ul>
+                <small>You just <strong>input</strong> your username and click in GO to list it's repositories</small>
+            </ul>
+        </div>
+    </div>
+    <div class="card mb-3 mt-2">
+        <div class="card-body" style="padding-top: 10px">
+            <form action="{% url 'index' %}" method="get" class="form-group">
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <div class="input-group">
+                        {% if query_value %}
+                            <input disabled id="sq" name="q" type="text" placeholder="Github username..." value="{{query_value}}" class="form-control">
+                        {% else %}
+                            <input id="q" autofocus name="q" type="text" placeholder="Github username..." value="{{query_value}}" class="form-control">
+                        {% endif %}
+                        {% if not query_value %}
+                            <div class="input-group-append" style="margin-left: 5px;">
+                                <button class="btn btn-primary" type="submit">Search</button>
+                            </div>
+                        {% else %}
+                            <div class="input-group-append" style="margin-left: 5px;">
+                                <button class="btn btn-warning" type="submit" onclick="cleanInput()" >Clear research</button>
+                            </div>
+                        {% endif %}
+                      </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-12">
+        {% if repos %}
+            {% if not new_record %}
+                <p>Repos already exists in our database</p>
+            {% else %}
+                <p>We found new repos here, it will be stored in our database</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {%if not repos%}
+    <p style="text-align: center;"><strong>No repositories listed</strong></p>
+    {% else %}
+    <table style="margin-left: auto; margin-right: auto;">
+       <tr>
+         <th style="width: 250px;">Name</th>
+         <th style="width: 500px;">HTML URL</th>
+         <th style="width: 300px;">Description</th>
+         <th style="width: 100px;">Language</th>
+       </tr>
+       {% for repo in repos %}
+           <tr>
+           <td>{{repo.repo_name}}</td>
+           <td><a href="{{repo.html_url}}" target="_blank">{{repo.html_url}}</a></td>
+           <td>{{repo.description}}</td>
+           <td>{{repo.language}}</td>
+           </tr>
+       {% endfor %}
+
+</table>
+    {% endif %}
+
+    <script>
+        $(document).ready(function() {
+            //remove param query
+            let url = window.location.href.substring(0, window.location.href.indexOf('?'));
+            if (url){
+                window.history.pushState("", "", '/');
+            }
+        })
+        function cleanInput(){
+            document.getElementById("q").value = "";
+        }
+    </script>
+    {% endblock %}
+</body>
+
+</html>
